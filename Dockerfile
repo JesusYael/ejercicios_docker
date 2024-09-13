@@ -1,38 +1,22 @@
 # Descargar la imagen de ubuntu
 FROM ubuntu:22.04
 
-# Actualizar la lista de actualizaciones
+# Actualizar la lista de actualizaciones e instalar las dependencias necesarias
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y python3 python3-pip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update
-
-# Actualizar la imagen
-
-RUN apt-get upgrade -y
-
-# Instalar python
-
-RUN apt-get install python3 -y
-
-# Copiar laa carpeta webapp
-
+# Copiar la carpeta webapp
 COPY ./WebApp /home/webapp
 
 # Establecer el directorio de trabajo
-
 WORKDIR /home/webapp
 
-# Instalar pip
-
-RUN apt-get install python3-pip -y
-
-#Instalar requirements.txt
-
+# Instalar requirements.txt
 RUN pip3 install -r requirements.txt
 
 # Abrir el puerto 8080
-
 EXPOSE 8080
 
-#Ejecutar la aplicacion
-
+# Ejecutar la aplicación
 CMD ["python3", "app.py"]
